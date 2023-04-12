@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
 public class MyFrame extends JFrame implements KeyListener , ActionListener {
     JLabel character;
     JLabel label;
@@ -12,20 +13,23 @@ public class MyFrame extends JFrame implements KeyListener , ActionListener {
     JLabel pipeLabel;
     ImageIcon pipe;
     Timer timer;
+    boolean Jump=false;
+    int SecJump=0;
+
     int xVelocity = 1;
     int yVelocity = 1;
     int x = 0;
     int y = 0;
     final int PANEL_WIDTH = 1000;
     final int PANEL_HEIGHT = 500;
-    MyFrame(){
 
+    MyFrame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(PANEL_WIDTH,PANEL_HEIGHT);
         this.setLayout(null);
         this.addKeyListener(this);
         icon= new ImageIcon(getClass().getResource("enemy2.png"));
-        timer= new Timer(100,this);
+        timer= new Timer(30,this);
         timer.start();
 
 
@@ -40,12 +44,10 @@ public class MyFrame extends JFrame implements KeyListener , ActionListener {
         label.setIcon(pipe);
         //label.setBackground(Color.red);
         //label.setOpaque(true);
-
         this.getContentPane().setBackground(Color.black);
         this.add(label);
         this.setVisible(true);
     }
-
     @Override
     public void keyTyped(KeyEvent e) {
         switch (Character.toLowerCase((e.getKeyChar()))){
@@ -73,11 +75,16 @@ public class MyFrame extends JFrame implements KeyListener , ActionListener {
                 break;
         }
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
             case 32:
+                if(character.getY()>0){
+                    character.setLocation(character.getX(),character.getY()-120);
+                    this.Jump=true;
+                    //gravity= new Timer(100,this);
+                    //gravity.start();
+                }
                 break;
             case 37:
                 if(character.getX()>0){
@@ -101,7 +108,6 @@ public class MyFrame extends JFrame implements KeyListener , ActionListener {
                 }
                 break;
         }
-
     }
 
     @Override
@@ -113,14 +119,18 @@ public class MyFrame extends JFrame implements KeyListener , ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(character.getX()< (PANEL_WIDTH)){
-            character.setLocation(character.getX()+10,character.getY());
-        }else{
+        if (label.getX() >= -100) {
+            label.setLocation(label.getX() - 10, label.getY());
+            System.out.println(label.getX());
+            System.out.println(PANEL_WIDTH);
+        } else {
+            character.setLocation(character.getX() + 10, label.getY());
             System.out.println("ganaste");
         }
-        if((character.getX()+character.getWidth())-50==label.getX() && character.getY()>(label.getHeight()+character.getHeight())+50){
+        if ((character.getX() + character.getWidth()) - 50 == label.getX() && character.getY() > (label.getHeight() + character.getHeight()) + 50) {
             System.out.println("chocaste");
-            character.setLocation(0,PANEL_HEIGHT-140);
+            label.setLocation(500,PANEL_HEIGHT-140);
+
         }
     }
 }
